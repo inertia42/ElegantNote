@@ -14,6 +14,11 @@ ElegantNote is designed for Notes. Just enjoy it! If you have any questions, sug
 
 设计 ElegantNote 是为了方便记录笔记和阅读笔记。如果你有其他问题、建议或者报告 bug，可以提交 issues 或者给我们发邮件：elegantlatex2e@gmail.com。最近我们新建了一个 QQ 用户交流群（Q 群：692108391），欢迎加入。
 
+# 声明
+本项目为个人自定义版本，主要修改如下：
+1. 将主要字体设为方正宋刻本秀楷。
+2. 添加个人常用包。
+
 # License
 
 This work is released under the LaTeX Project Public License, v1.3c or later. 
