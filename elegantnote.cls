@@ -4,8 +4,9 @@
 % Lastest Version: https://github.com/ElegantLaTeX/ElegantNote
 
 % --- Class structure: identification part
-\ProvidesClass{elegantnote}[2020/04/12 ElegantNote v2.30 class]
+\ProvidesClass{elegantnote}[2022/04/09 ElegantNote v2.40 class]
 \NeedsTeXFormat{LaTeX2e}
+
 
 \RequirePackage{kvoptions}
 \RequirePackage{etoolbox}
@@ -20,6 +21,7 @@
 \DeclareVoidOption{blue}{\ekv{color=blue}}
 \DeclareVoidOption{sakura}{\ekv{color=sakura}}
 \DeclareVoidOption{black}{\ekv{color=black}}
+\DeclareVoidOption{brown}{\ekv{color=brown}}
 
 \DeclareStringOption[pad]{device}
 \DeclareVoidOption{pc}{\ekv{device=pc}}
@@ -35,18 +37,20 @@
 \DeclareStringOption{mode}
 \DeclareVoidOption{geye}{\ekv{mode=geye}}
 \DeclareVoidOption{hazy}{\ekv{mode=hazy}}
+\DeclareVoidOption{sepia}{\ekv{mode=sepia}}
 
 \DeclareStringOption[ctexfont]{chinesefont}
 \DeclareVoidOption{ctexfont}{\ekv{chinesefont=ctexfont}}
 \DeclareVoidOption{founder}{\ekv{chinesefont=founder}}
 \DeclareVoidOption{nofont}{\ekv{chinesefont=nofont}}
 
-\DeclareStringOption[numbers]{cite}
-\DeclareVoidOption{numbers}{\ekv{cite=numbers}}
-\DeclareVoidOption{authoryear}{\ekv{cite=authoryear}}
-\DeclareVoidOption{super}{\ekv{cite=super}}
+\DeclareStringOption[numeric-comp]{citestyle}
+\DeclareStringOption[numeric]{bibstyle}
 
-\DeclareStringOption[apalike]{bibstyle}
+\DeclareStringOption[biber]{bibend}
+\DeclareVoidOption{biber}{\ekv{bibend=biber}}
+\DeclareVoidOption{bibtex}{\ekv{bibend=bibtex}}
+
 
 \DeclareStringOption[11pt]{fontsize}
 \DeclareVoidOption{10pt}{\ekv{fontsize=10pt}}
@@ -66,40 +70,59 @@
 \LoadClass{article}
 
 \PassOptionsToPackage{no-math}{fontspec}
+\PassOptionsToPackage{quiet}{fontspec}
 \RequirePackage{amsmath,amsthm}
 
 \RequirePackage{iftex}
 
-\ifdefstring{\ELEGANT@lang}{cn}{%
 \ifXeTeX
-    \ifdefstring{\ELEGANT@chinesefont}{founder}{
-      \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}
-      \setCJKmainfont[BoldFont={FZHei-B01},ItalicFont={FZKai-Z03}]{FZShuSong-Z01}
-      \setCJKsansfont[BoldFont={FZHei-B01},ItalicFont={FZHei-B01}]{FZHei-B01}
-      \setCJKmonofont[BoldFont={FZHei-B01},ItalicFont={FZHei-B01}]{FZFangSong-Z02}
-      \setCJKfamilyfont{zhsong}{FZShuSong-Z01}
-      \setCJKfamilyfont{zhhei}{FZHei-B01}
-      \setCJKfamilyfont{zhkai}{FZKai-Z03}
-      \setCJKfamilyfont{zhfs}{FZFangSong-Z02}
-      \newcommand*{\songti}{\CJKfamily{zhsong}}
-      \newcommand*{\heiti}{\CJKfamily{zhhei}}
-      \newcommand*{\kaishu}{\CJKfamily{zhkai}}
-      \newcommand*{\fangsong}{\CJKfamily{zhfs}}}{\relax}
+  \RequirePackage[no-math]{fontspec}
+  \setmainfont{texgyretermes}[
+    UprightFont = *-regular ,
+    BoldFont = *-bold ,
+    ItalicFont = *-italic ,
+    BoldItalicFont = *-bolditalic ,
+    Extension = .otf ,
+    Scale = 1.0]
     
-    \ifdefstring{\ELEGANT@chinesefont}{nofont}{
-      \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}}{\relax}
+  \setsansfont{texgyreheros}[
+    UprightFont = *-regular ,
+    BoldFont = *-bold ,
+    ItalicFont = *-italic ,
+    BoldItalicFont = *-bolditalic ,
+    Extension = .otf ,
+    Scale = 0.9]
+\else
+  \RequirePackage{newtxtext}
+  \RequirePackage[scaled=.90]{helvet}
+\fi
 
-    \ifdefstring{\ELEGANT@chinesefont}{ctexfont}{
-      \RequirePackage[UTF8,scheme=plain]{ctex}}{\relax}
-  \else
-    \ifdefstring{\ELEGANT@chinesefont}{ctexfont}{
-      \RequirePackage[UTF8,scheme=plain]{ctex}}{\relax}
-  \fi
+
+
+\ifdefstring{\ELEGANT@lang}{cn}{
+  \ifdefstring{\ELEGANT@chinesefont}{founder}{
+    \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}
+    \setCJKmainfont[BoldFont={FZHei-B01},ItalicFont={FZKai-Z03}]{FZShuSong-Z01}
+    \setCJKsansfont[BoldFont={FZHei-B01}]{FZKai-Z03}
+    \setCJKmonofont[BoldFont={FZHei-B01}]{FZFangSong-Z02}
+    \setCJKfamilyfont{zhsong}{FZShuSong-Z01}
+    \setCJKfamilyfont{zhhei}{FZHei-B01}
+    \setCJKfamilyfont{zhkai}[BoldFont={FZHei-B01}]{FZKai-Z03}
+    \setCJKfamilyfont{zhfs}[BoldFont={FZHei-B01}]{FZFangSong-Z02}
+    \newcommand*{\songti}{\CJKfamily{zhsong}}
+    \newcommand*{\heiti}{\CJKfamily{zhhei}}
+    \newcommand*{\kaishu}{\CJKfamily{zhkai}}
+    \newcommand*{\fangsong}{\CJKfamily{zhfs}}}{\relax}
+  
+  \ifdefstring{\ELEGANT@chinesefont}{nofont}{
+    \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}}{\relax}
+
+  \ifdefstring{\ELEGANT@chinesefont}{ctexfont}{
+    \RequirePackage[UTF8,scheme=plain]{ctex}}{\relax}
+  
   \AfterEndPreamble{
-  % \renewcommand{\itshape}{\kaishu}
-  \setlength\parindent{2\ccwd}}
-  }{\relax}
-
+    \setlength\parindent{2\ccwd}}
+}{\relax}
 
 \ifcsname kaishu\endcsname
   \newcommand{\citshape}{\kaishu}
@@ -118,7 +141,6 @@
 \fi
 
 
-\RequirePackage{newtxtext}
 \ifdefstring{\ELEGANT@math}{newtx}{
   \RequirePackage{newtxmath}
   \let\Bbbk\relax
@@ -138,6 +160,61 @@
   \DeclareMathSymbol{\prodop}{\mathop}{CMlargesymbols}{"51}
 }{\relax}
 
+
+\RequirePackage[
+  backend=\ELEGANT@bibend,
+  citestyle=\ELEGANT@citestyle,
+  bibstyle=\ELEGANT@bibstyle]{biblatex}
+\defbibheading{elegantbook}[\ebibname]{#1}
+
+\RequirePackage{appendix}
+
+\ifdefstring{\ELEGANT@lang}{cn}{%
+  \theoremstyle{plain}% default
+  \newtheorem{theorem}{定理}[section] %
+  \newtheorem{lemma}[theorem]{引理} %
+  \newtheorem{proposition}[theorem]{命题} %
+  \newtheorem*{corollary}{推论} %
+  \theoremstyle{definition} %
+  \newtheorem{definition}{定义}[section] %
+  \newtheorem{conjecture}{猜想}[section] %
+  \newtheorem{example}{例}[section] %
+  \theoremstyle{remark} %
+  \newtheorem*{remark}{\normalfont\bfseries 评论} %
+  \newtheorem*{note}{\normalfont\bfseries 注} %
+  \newtheorem{case}{\normalfont\bfseries 案例} %
+  \renewcommand*{\proofname}{\normalfont\bfseries\color{ecolor}证明} %
+  \renewcommand\contentsname{\color{ecolor}目录}
+  \renewcommand\refname{\color{ecolor}参考文献} %
+  \renewcommand\figurename{图} %
+  \renewcommand\tablename{表}
+  \newcommand\versiontext{版本：}%
+  \newcommand\updatetext{更新：}%
+  \newcommand\ebibname{参考文献}
+  \setlength{\parindent}{2em}
+  \newcommand{\keywords}[1]{%
+    \vskip2ex\par\noindent\normalfont{\bfseries 关键词: } #1}
+  }{\relax}
+
+\ifdefstring{\ELEGANT@lang}{en}{
+  \theoremstyle{plain}% default
+  \newtheorem{theorem}{Theorem}[section] %
+  \newtheorem{lemma}[theorem]{Lemma} %
+  \newtheorem{proposition}[theorem]{Proposition} %
+  \newtheorem*{corollary}{Corollary} %
+  \theoremstyle{definition} %
+  \newtheorem{definition}{Definition}[section] %
+  \newtheorem{conjecture}{Conjecture}[section] %
+  \newtheorem{example}{Example}[section] %
+  \theoremstyle{remark} %
+  \newtheorem*{remark}{Remark} %
+  \newtheorem*{note}{Note} %
+  \newcommand\ebibname{Bibliography}
+  \newtheorem{case}{Case} 
+  \renewcommand*{\proofname}{%
+    \normalfont\bfseries\color{ecolor} Proof}
+  \newcommand\versiontext{Version: }%
+  \newcommand\updatetext{Update: }}{\relax}
 
 \RequirePackage{indentfirst}
 \RequirePackage{anyfontsize}
@@ -178,6 +255,10 @@
 }{\relax}
 \ifdefstring{\ELEGANT@mode}{hazy}{
   \definecolor{geyecolor}{RGB}{251,250,248}%
+  \pagecolor{geyecolor}
+}{\relax}
+\ifdefstring{\ELEGANT@mode}{sepia}{
+  \definecolor{geyecolor}{RGB}{250,237,225}%
   \pagecolor{geyecolor}
 }{\relax}
 
@@ -242,11 +323,15 @@
 \ifdefstring{\ELEGANT@color}{black}{
   \definecolor{ecolor}{RGB}{0,0,0}%
 }{\relax}
+\ifdefstring{\ELEGANT@color}{brown}{
+  \definecolor{ecolor}{RGB}{109,62,18}%
+}{\relax}
 
 \definecolor{egreen}{RGB}{0,120,2}
 \definecolor{ecyan}{RGB}{0,175,152}
 \definecolor{eblue}{RGB}{20,50,104}
 \definecolor{sakura}{RGB}{255,183,197}
+\definecolor{brown}{RGB}{109,62,18}
 
 %% device settings
 %% default=pad
@@ -312,61 +397,7 @@
 \pagestyle{fancy-note}
 
 
-\ifdefstring{\ELEGANT@lang}{cn}{%
-  \theoremstyle{plain}% default
-  \newtheorem{theorem}{定理}[section] %
-  \newtheorem{lemma}[theorem]{引理} %
-  \newtheorem{proposition}[theorem]{命题} %
-  \newtheorem*{corollary}{推论} %
-  \theoremstyle{definition} %
-  \newtheorem{definition}{定义}[section] %
-  \newtheorem{conjecture}{猜想}[section] %
-  \newtheorem{example}{例}[section] %
-  \theoremstyle{remark} %
-  \newtheorem*{remark}{\normalfont\bfseries 评论} %
-  \newtheorem*{note}{\normalfont\bfseries 注} %
-  \newtheorem{case}{\normalfont\bfseries 案例} %
-  \renewcommand*{\proofname}{\normalfont\bfseries\color{ecolor}证明} %
-  \renewcommand\contentsname{\color{ecolor}目录}
-  \renewcommand\refname{\color{ecolor}参考文献} %
-  \renewcommand\figurename{图} %
-  \renewcommand\tablename{表}
-  \newcommand\versiontext{版本：}%
-  \newcommand\updatetext{更新：}%
-  \setlength{\parindent}{2em}
-  \newcommand{\keywords}[1]{%
-    \vskip2ex\par\noindent\normalfont{\bfseries 关键词: } #1}
-  \RequirePackage{gbt7714}
-  \ifdefstring{\ELEGANT@cite}{authoryear}{
-    \bibliographystyle{gbt7714-author-year}}{
-    \bibliographystyle{gbt7714-numerical}}
-  \ifdefstring{\ELEGANT@cite}{numbers}{
-    \citestyle{numbers}}{\relax}
-  }{\relax}
 
-\ifdefstring{\ELEGANT@lang}{en}{
-  \theoremstyle{plain}% default
-  \newtheorem{theorem}{Theorem}[section] %
-  \newtheorem{lemma}[theorem]{Lemma} %
-  \newtheorem{proposition}[theorem]{Proposition} %
-  \newtheorem*{corollary}{Corollary} %
-  \theoremstyle{definition} %
-  \newtheorem{definition}{Definition}[section] %
-  \newtheorem{conjecture}{Conjecture}[section] %
-  \newtheorem{example}{Example}[section] %
-  \theoremstyle{remark} %
-  \newtheorem*{remark}{Remark} %
-  \newtheorem*{note}{Note} %
-  \newtheorem{case}{Case} 
-  \renewcommand*{\proofname}{%
-    \normalfont\bfseries\color{ecolor} Proof}
-  \newcommand\versiontext{Version: }%
-  \newcommand\updatetext{Update: }%
-  \RequirePackage[\ELEGANT@cite,sort&compress]{natbib}
-  \bibliographystyle{\ELEGANT@bibstyle}}{%
-  \relax}
-
-\setlength{\bibsep}{0.0pt}
 \def\bibfont{\footnotesize}
 
 \def\IfEmpty#1{%
@@ -550,3 +581,8 @@
     keywords},
   frame=none,
   tabsize=2}
+
+\addbibresource[location=local]{reference.bib}
+
+% restore the tt default family to lmodern tt family
+\renewcommand\ttdefault{lmtt}
