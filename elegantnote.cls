@@ -43,6 +43,7 @@
 \DeclareVoidOption{ctexfont}{\ekv{chinesefont=ctexfont}}
 \DeclareVoidOption{founder}{\ekv{chinesefont=founder}}
 \DeclareVoidOption{nofont}{\ekv{chinesefont=nofont}}
+\DeclareVoidOption{custom}{\ekv{chinesefont=custom}}
 
 \DeclareStringOption[numeric-comp]{citestyle}
 \DeclareStringOption[numeric]{bibstyle}
@@ -120,6 +121,20 @@
   \ifdefstring{\ELEGANT@chinesefont}{ctexfont}{
     \RequirePackage[UTF8,scheme=plain]{ctex}}{\relax}
   
+  \ifdefstring{\ELEGANT@chinesefont}{custom}{
+    \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}
+    \setCJKmainfont[BoldFont={SimHei},ItalicFont={SimFang.ttf}]{FZSKBXKJW.TTF}
+    \setCJKsansfont[BoldFont={SimHei}]{SimKai}
+    \setCJKmonofont[BoldFont={SimHei}]{SimFang.ttf}
+    \setCJKfamilyfont{zhsong}{FZSKBXKJW.TTF}
+    \setCJKfamilyfont{zhhei}{SimHei}
+    \setCJKfamilyfont{zhkai}[BoldFont={SimHei}]{KaiTi}
+    \setCJKfamilyfont{zhfs}[BoldFont={SimHei}]{SimFang.ttf}
+    \newcommand*{\songti}{\CJKfamily{zhsong}}
+    \newcommand*{\heiti}{\CJKfamily{zhhei}}
+    \newcommand*{\kaishu}{\CJKfamily{zhkai}}
+    \newcommand*{\fangsong}{\CJKfamily{zhfs}}}{\relax}
+
   \AfterEndPreamble{
     \setlength\parindent{2\ccwd}}
 }{\relax}
